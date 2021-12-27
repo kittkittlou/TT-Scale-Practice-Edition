@@ -56,6 +56,14 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.weightPerToon = {}
         self.cannonIndexPerToon = {}
         self.battleDifficulty = 0
+        self.practiceVal = 0
+        self.stunTimeDict = {
+            0: 0,
+            4: 9.6,
+            6: 8.6,
+            8: 8,            
+        }
+        
         return
 
     def delete(self):
@@ -101,6 +109,10 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             self.b_setState('Victory')
         else:
             self.__recordHit()
+            
+    def __stunTheLawyers(self, task=None):
+        for suit in self.lawyers:
+            suit.hitByToon()
 
     def healBoss(self, bossHeal):
         bossDamage = -bossHeal
@@ -471,6 +483,8 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def enterBattleThree(self):
+        if self.practiceVal != 0:
+            taskMgr.doMethodLater(self.stunTimeDict[self.practiceVal], self.__stunTheLawyers, self.uniqueName('stun-task'))
         self.battleThreeTimeStarted = globalClock.getFrameTime()
         self.calcAndSetBattleDifficulty()
         if self.chairs != None:
