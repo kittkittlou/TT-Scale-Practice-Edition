@@ -1845,17 +1845,19 @@ class rsc(MagicWord):
         boss.exitIntroduction()
         boss.b_setState('BattleThree')
         return "Restarting Scale Round"
-
-class cjp(MagicWord):
-    desc = "Flips a switch for practice"
+        
+class practice(MagicWord):
+    desc = "Flips a switch for practice mode"
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    arguments = [("val", int, True)]
+    arguments = [("val", int, True), ("role", str, False, None)]
     accessLevel = "MODERATOR"
 
     def handleWord(self, invoker, avId, toon, *args):
         val = args[0]
+        role = args[1]
         if val not in [0, 4, 6, 8]:
             return 'Invalid number specified!'
+
         from toontown.suit.DistributedLawbotBossAI import DistributedLawbotBossAI
         boss = None
         for do in simbase.air.doId2do.values():
@@ -1865,8 +1867,13 @@ class cjp(MagicWord):
                     break
         if not boss:
             return "You aren't in a CJ!"
+            
+        if role.lower() not in boss.roleCogsDict[val].keys():
+            return 'Invalid role specified!'
+
         boss.practiceVal = val
-        return "Stun Scheduled!"
+        boss.practiceRole = role
+        return "Role Set!"        
 
 class cannons(MagicWord):
     desc = "Enters the cannon round"

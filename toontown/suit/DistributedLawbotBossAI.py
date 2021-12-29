@@ -54,15 +54,48 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.numAreaAttacks = 0
         self.lastAreaAttackTime = 0
         self.weightPerToon = {}
+        self.initialWeightPerToon = {}
         self.cannonIndexPerToon = {}
         self.battleDifficulty = 0
         self.practiceVal = 0
+        self.practiceRole = None
         self.stunTimeDict = {
             0: 0,
             4: 9.6,
             6: 8.6,
             8: 8,            
         }
+        self.roleCogsDict = {
+            4: {
+                'stun1': [8, 3, 4, 6, 7, 9],
+                'stun2': [2, 1, 0, 5],
+                'panleft': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                'panright': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                None: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            },
+            6: {
+                'stun1': [8, 0, 1, 2],
+                'stun2': [3], #jump snipe
+                'stun3': [4], #jump snipe
+                'stun4': [9, 6, 7, 8],
+                'panleft': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                'panright': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                None: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            },
+            8: {
+                'stun1': [8, 0, 1],
+                'stun2': [3], #jump snipe
+                'stun3': [4], #jump snipe
+                'stun4': [9, 6, 7],
+                'stun5': [2], #jump snipe
+                'stun6': [5], #jump snipe
+                'panleft': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                'panright': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                None: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            }
+        }
+        
+        
         
         return
 
@@ -483,7 +516,10 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def enterBattleThree(self):
-        if self.practiceVal != 0:
+        taskName = self.uniqueName('stun-task')
+        taskMgr.remove(taskName)
+        if self.practiceVal != 0 and 'stun' not in self.practiceRole:
+            self.calculateWeightPerToon()
             taskMgr.doMethodLater(self.stunTimeDict[self.practiceVal], self.__stunTheLawyers, self.uniqueName('stun-task'))
         self.battleThreeTimeStarted = globalClock.getFrameTime()
         self.calcAndSetBattleDifficulty()
@@ -806,6 +842,9 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.__resetLawyers()
         lawCogChoices = ['b','dt', 'ac', 'bs', 'sd', 'le', 'bw']
         for i in xrange(self.numLawyers):
+            if self.practiceVal and self.practiceRole:
+                if i not in self.roleCogsDict[self.practiceVal][self.practiceRole]:
+                    continue
             suit = DistributedLawbotBossSuitAI.DistributedLawbotBossSuitAI(self.air, None)
             suit.dna = SuitDNA.SuitDNA()
             lawCog = random.choice(lawCogChoices)
@@ -906,6 +945,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         return retVal
 
     def calculateWeightPerToon(self):
+        print("Hi I'm calculating")
         for toonId in self.involvedToons:
             defaultWeight = 1
             bonusWeight = 0
@@ -913,10 +953,18 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             if not cannonIndex == None:
                 diffSettings = ToontownGlobals.LawbotBossDifficultySettings[self.battleDifficulty]
                 if diffSettings[4]:
-                    bonusWeight = self.numJurorsSeatedByCannon(cannonIndex) - diffSettings[5]
+                    if toonId not in self.weightPerToon:
+                        bonusWeight = self.numJurorsSeatedByCannon(cannonIndex) - diffSettings[5]
+                    else:
+                        bonusWeight = self.initialWeightPerToon[toonId] - 1
                     if bonusWeight < 0:
                         bonusWeight = 0
-            newWeight = defaultWeight + bonusWeight
+            practiceWeight = 0
+            if self.practiceVal:
+                practiceWeight = self.practiceVal - 1
+            newWeight = defaultWeight + bonusWeight + practiceWeight
+            if toonId not in self.weightPerToon:
+                self.initialWeightPerToon[toonId] = newWeight
             self.weightPerToon[toonId] = newWeight
             self.notify.debug('toon %d has weight of %d' % (toonId, newWeight))
 
