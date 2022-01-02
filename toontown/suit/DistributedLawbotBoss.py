@@ -75,12 +75,14 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.evidenceHitSfx = None
         self.toonUpSfx = None
         self.bonusTimer = None
+        self.rscTimer = None
         self.warningSfx = None
         self.juryMovesSfx = None
         self.baseColStashed = False
         self.battleDifficulty = 0
         self.bonusWeight = 0
         self.numJurorsLocalToonSeated = 0
+        self.prepareBattleThreeTime = 5
         self.cannonIndex = -1
         return
 
@@ -169,6 +171,9 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         if self.bonusTimer:
             self.bonusTimer.destroy()
             del self.bonusTimer
+        if self.rscTimer:
+            self.rscTimer.destroy()
+            del self.rscTimer
         localAvatar.chatMgr.chatInputSpeedChat.removeCJMenu()
         if OneBossCog == self:
             OneBossCog = None
@@ -908,6 +913,11 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def enterPrepareBattleThree(self):
         self.notify.debug('----- enterPrepareBattleThree')
+        if not self.rscTimer:
+            self.rscTimer = ToontownTimer.ToontownTimer()
+            self.rscTimer.posInTopRightCorner()
+        self.rscTimer.show()
+        self.rscTimer.countdown(self.prepareBattleThreeTime, self.hideRscTimer)
         self.cleanupIntervals()
         self.controlToons()
         self.setToonsToNeutral(self.involvedToons)
@@ -1804,6 +1814,10 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def hideBonusTimer(self):
         if self.bonusTimer:
             self.bonusTimer.hide()
+
+    def hideRscTimer(self):
+        if self.rscTimer:
+            self.rscTimer.hide()
 
     def enteredBonusState(self):
         self.witnessToon.clearChat()

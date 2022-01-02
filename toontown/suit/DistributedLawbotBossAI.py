@@ -59,6 +59,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.battleDifficulty = 0
         self.practiceVal = 0
         self.practiceRole = None
+        self.prepareBattleThreeTime = 5
         self.stunTimeDict = {
             0: 0,
             4: 9.6,
@@ -507,7 +508,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
 
     def enterPrepareBattleThree(self):
         self.calcAndSetBattleDifficulty()
-        self.barrier = self.beginBarrier('PrepareBattleThree', self.involvedToons, 45, self.__donePrepareBattleThree)
+        self.barrier = self.beginBarrier('PrepareBattleThree', self.involvedToons, self.prepareBattleThreeTime, self.__donePrepareBattleThree)
 
     def __donePrepareBattleThree(self, avIds):
         self.b_setState('BattleThree')

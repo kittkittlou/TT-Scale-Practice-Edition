@@ -1845,6 +1845,29 @@ class rsc(MagicWord):
         boss.exitIntroduction()
         boss.b_setState('BattleThree')
         return "Restarting Scale Round"
+
+class rsco(MagicWord):
+    desc = "Restarts the scale round"
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments = [("round", str, False, "next")]
+    accessLevel = "MODERATOR"
+
+    def handleWord(self, invoker, avId, toon, *args):
+        battle = args[0]
+        from toontown.suit.DistributedLawbotBossAI import DistributedLawbotBossAI
+        boss = None
+        for do in simbase.air.doId2do.values():
+            if isinstance(do, DistributedLawbotBossAI):
+                if invoker.doId in do.involvedToons:
+                    boss = do
+                    break
+        if not boss:
+            return "You aren't in a CJ!"
+
+        battle = battle.lower()
+        boss.exitIntroduction()
+        boss.b_setState('PrepareBattleThree')
+        return "Restarting Scale Round"
         
 class practice(MagicWord):
     desc = "Flips a switch for practice mode"
