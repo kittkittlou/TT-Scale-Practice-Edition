@@ -75,6 +75,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.evidenceHitSfx = None
         self.toonUpSfx = None
         self.bonusTimer = None
+        self.immunityTimer = None
         self.rscTimer = None
         self.warningSfx = None
         self.juryMovesSfx = None
@@ -171,6 +172,9 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         if self.bonusTimer:
             self.bonusTimer.destroy()
             del self.bonusTimer
+        if self.immunityTimer:
+            self.immunityTimer.destroy()
+            del self.immunityTimer
         if self.rscTimer:
             self.rscTimer.destroy()
             del self.rscTimer
@@ -1815,6 +1819,19 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         if self.bonusTimer:
             self.bonusTimer.hide()
 
+    def hideImmunityTimer(self):
+        if self.immunityTimer:
+            self.immunityTimer.hide()
+
+    def showImmunityTimer(self):
+        if self.bonusTimer:
+            self.hideBonusTimer()
+        if not self.immunityTimer:
+            self.immunityTimer = ToontownTimer.ToontownTimer()
+            self.immunityTimer.posInTopRightCorner()
+        self.immunityTimer.show()
+        self.immunityTimer.countdown(ToontownGlobals.LawbotBossBonusWaitTime - ToontownGlobals.LawbotBossBonusDuration, self.hideImmunityTimer)
+
     def hideRscTimer(self):
         if self.rscTimer:
             self.rscTimer.hide()
@@ -1828,7 +1845,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.bonusTimer = ToontownTimer.ToontownTimer()
             self.bonusTimer.posInTopRightCorner()
         self.bonusTimer.show()
-        self.bonusTimer.countdown(ToontownGlobals.LawbotBossBonusDuration, self.hideBonusTimer)
+        self.bonusTimer.countdown(ToontownGlobals.LawbotBossBonusDuration, self.showImmunityTimer)
 
     def setAttackCode(self, attackCode, avId = 0):
         DistributedBossCog.DistributedBossCog.setAttackCode(self, attackCode, avId)

@@ -1397,7 +1397,7 @@ LawbotBossChairRow1PosB = (59.3, 48, 14.05)
 LawbotBossChairRow1PosA = (59.3, -18.2, 14.05)
 LawbotBossChairRow2PosB = (75.1, 48, 28.2)
 LawbotBossChairRow2PosA = (75.1, -18.2, 28.2)
-LawbotBossCannonBallMax = 24
+LawbotBossCannonBallMax = 12
 LawbotBossJuryBoxStartPos = (94, -8, 5)
 LawbotBossJuryBoxRelativeEndPos = (30, 0, 12.645)
 LawbotBossJuryBoxMoveTime = 70
@@ -1413,7 +1413,7 @@ LawbotBossWitnessEpiloguePosHpr = (-3,
  0,
  0)
 LawbotBossChanceForTaunt = 25
-LawbotBossBonusWaitTime = 0
+LawbotBossBonusWaitTime = 20
 LawbotBossBonusDuration = 20
 LawbotBossBonusToonup = 10
 LawbotBossBonusWeightMultiplier = 2
