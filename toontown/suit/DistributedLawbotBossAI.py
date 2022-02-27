@@ -962,7 +962,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
                         bonusWeight = 0
             practiceWeight = 0
             if self.practiceVal:
-                practiceWeight = self.practiceVal - 1
+                practiceWeight = int((self.practiceVal - 1)/len(self.involvedToons))
             newWeight = defaultWeight + bonusWeight + practiceWeight
             if toonId not in self.weightPerToon:
                 self.initialWeightPerToon[toonId] = newWeight
