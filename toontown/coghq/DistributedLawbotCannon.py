@@ -147,7 +147,7 @@ class DistributedLawbotCannon(DistributedObject.DistributedObject):
         del self.sndCannonFire
         del self.sndHitGround
         del self.sndHitChair
-        if self.av:
+        if self.av == base.localAvatar:
             self.__resetToon(self.av)
             self.av.loop('neutral')
             self.av.setPlayRate(1.0, 'run')

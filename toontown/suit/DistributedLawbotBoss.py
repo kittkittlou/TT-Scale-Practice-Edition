@@ -98,7 +98,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.piesRestockSfx = loader.loadSfx('phase_5/audio/sfx/LB_receive_evidence.ogg')
         self.rampSlideSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_VP_ramp_slide.ogg')
         self.evidenceHitSfx = loader.loadSfx('phase_11/audio/sfx/LB_evidence_hit.ogg')
-        self.evidenceMissSfx = loader.loadSfx('phase_11/audio/sfx/LB_evidence_miss_2.ogg')
+        #self.evidenceMissSfx = loader.loadSfx('phase_11/audio/sfx/LB_evidence_miss_2.ogg')
         self.warningSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_GOON_tractor_beam_alarmed.ogg')
         self.juryMovesSfx = loader.loadSfx('phase_11/audio/sfx/LB_jury_moves.ogg')
         self.toonUpSfx = loader.loadSfx('phase_11/audio/sfx/LB_toonup.ogg')
@@ -1267,7 +1267,8 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             pass
         else:
             if toon == localAvatar:
-                base.playSfx(self.evidenceMissSfx, node=self.defensePanNodePath, volume=1.5)
+                #base.playSfx(self.evidenceMissSfx, node=self.defensePanNodePath, volume=1.5)
+                pass
 
     def __localPieSplat(self, pieCode, entry):
         if pieCode == ToontownGlobals.PieCodeLawyer:
