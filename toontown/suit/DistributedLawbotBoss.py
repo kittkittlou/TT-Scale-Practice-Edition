@@ -838,6 +838,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.stingMusic.stop()
 
     def enterBattleTwo(self):
+        self.scaleNodePath.stash()
         self.notify.debug('----- enterBattleTwo')
         self.cleanupIntervals()
         mult = ToontownBattleGlobals.getBossBattleCreditMultiplier(2)

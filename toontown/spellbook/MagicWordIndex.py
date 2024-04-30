@@ -1918,7 +1918,11 @@ class cannons(MagicWord):
 
         battle = battle.lower()
         boss.exitIntroduction()
-        boss.b_setState('BattleOne')
+        
+        if boss.state in ('Elevator', 'WaitForToons', 'Introduction'):
+            boss.b_setState('BattleOne')
+            boss.b_setState('RollToBattleTwo')
+        
         boss.b_setState('PrepareBattleTwo')
         return "Entering Cannon Round"
 
