@@ -2878,7 +2878,8 @@ class Toon(Avatar.Avatar, ToonHead):
         if pieType == 'actor':
             animPie = ActorInterval(pie, pieName, startFrame=0, endFrame=31)
             pingpongPie = Func(pie.pingpong, pieName, fromFrame=32, toFrame=47)
-        track = Sequence(Func(self.setPosHpr, x, y, z, h, p, r), Func(pie.reparentTo, self.rightHand), Func(pie.setPosHpr, 0, 0, 0, 0, 0, 0), Parallel(pie.scaleInterval(1, self.pieScale, startScale=MovieUtil.PNT3_NEARZERO), ActorInterval(self, 'throw', startFrame=0, endFrame=31), animPie), Func(self.pingpong, 'throw', fromFrame=32, toFrame=47), pingpongPie)
+        partName = None if self.playingAnim == 'neutral' else 'torso'
+        track = Sequence(Func(self.setPosHpr, x, y, z, h, p, r), Func(pie.reparentTo, self.rightHand), Func(pie.setPosHpr, 0, 0, 0, 0, 0, 0), Parallel(pie.scaleInterval(1, self.pieScale, startScale=MovieUtil.PNT3_NEARZERO), ActorInterval(self, 'throw', startFrame=0, endFrame=31, partName=partName), animPie), Func(self.pingpong, 'throw', fromFrame=32, toFrame=45, partName=partName), pingpongPie)
         return track
 
     def getTossPieInterval(self, x, y, z, h, p, r, power, beginFlyIval = Sequence()):
@@ -2901,9 +2902,19 @@ class Toon(Avatar.Avatar, ToonHead):
         def getVelocity(toon = self, relVel = relVel):
             return render.getRelativeVector(toon, relVel)
 
-        toss = Track((0, Sequence(Func(self.setPosHpr, x, y, z, h, p, r), Func(pie.reparentTo, self.rightHand), Func(pie.setPosHpr, 0, 0, 0, 0, 0, 0), Parallel(ActorInterval(self, 'throw', startFrame=48), animPie), Func(self.loop, 'neutral'))), (16.0 / 24.0, Func(pie.detachNode)))
-        fly = Track((14.0 / 24.0, SoundInterval(sound, node=self)), (16.0 / 24.0, Sequence(Func(flyPie.reparentTo, render), Func(flyPie.setScale, self.pieScale), Func(flyPie.setPosHpr, self, 0.52, 0.97, 2.24, 89.42, -10.56, 87.94), beginFlyIval, ProjectileInterval(flyPie, startVel=getVelocity, duration=3), Func(flyPie.detachNode))))
-        return (toss, fly, flyPie)
+        partName = None if self.playingAnim == 'neutral' else 'torso'
+
+        def matchRunningAnim(toon = self):
+            toon.playingAnim = None
+            toon.setSpeed(self.forwardSpeed, self.rotateSpeed)
+            return
+
+        if not pie:
+            return (Sequence(), Sequence(), flyPie)
+        else:
+            toss = Track((0, Sequence(Func(self.setPosHpr, x, y, z, h, p, r), Func(pie.reparentTo, self.rightHand), Func(pie.setPosHpr, 0, 0, 0, 0, 0, 0), Parallel(ActorInterval(self, 'throw', startFrame=46, partName=partName), animPie), Func(matchRunningAnim))), (16.0 / 24.0, Func(pie.detachNode)))
+            fly = Track((14.0 / 24.0, SoundInterval(sound, node=self)), (16.0 / 24.0, Sequence(Func(flyPie.reparentTo, render), Func(flyPie.setScale, self.pieScale), Func(flyPie.setPosHpr, self, 0.52, 0.97, 2.24, 89.42, -10.56, 87.94), beginFlyIval, ProjectileInterval(flyPie, startVel=getVelocity, duration=3), Func(flyPie.detachNode))))
+            return (toss, fly, flyPie)
 
     def getPieSplatInterval(self, x, y, z, pieCode):
         from toontown.toonbase import ToontownBattleGlobals
