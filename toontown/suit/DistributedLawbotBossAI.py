@@ -366,6 +366,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def enterPrepareBattleTwo(self):
+        self.sendUpdate('resetBattleTwoObjects', [])
         self.__makeCannons()
         self.barrier = self.beginBarrier('PrepareBattleTwo', self.involvedToons, 45, self.__donePrepareBattleTwo)
         self.makeBattleTwoBattles()
@@ -420,7 +421,6 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         if self.cannons != None:
             for cannon in self.cannons:
                 cannon.requestDelete()
-                self.sendUpdate('resetNumCannons', [])
 
             self.cannons = None
         return

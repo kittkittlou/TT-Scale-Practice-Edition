@@ -788,8 +788,9 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.clearInterval(intervalName)
         self.betweenBattleMusic.stop()
         
-    def resetNumCannons(self):
+    def resetBattleTwoObjects(self):
         self.cannons = {}
+        self.juryBox.setPos(-30, 0, -12.645)
 
     def enterPrepareBattleTwo(self):
         self.notify.debug('----- enterPrepareBattleTwo')
@@ -806,7 +807,6 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.storeInterval(seq, intervalName)
         self.acceptOnce('doneChatPage', self.__showCannonsAppearing)
         base.playMusic(self.stingMusic, looping=0, volume=1.0)
-        self.juryBox.setPos(-30, 0, -12.645)
 
     def __showCannonsAppearing(self, elapsedTime = 0):
         allCannonsAppear = Sequence(Func(self.__positionToonsInFrontOfCannons), Func(camera.reparentTo, localAvatar), Func(camera.setPos, localAvatar.cameraPositions[2][0]), Func(camera.lookAt, localAvatar))
