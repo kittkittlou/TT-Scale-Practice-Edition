@@ -1846,11 +1846,11 @@ class Stun(MagicWord):
 class rsc(MagicWord):
     desc = "Restarts the scale round"
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    arguments = [("round", str, False, "next")]
+    arguments = [("numSeats", int, False, 0)]
     accessLevel = "MODERATOR"
 
     def handleWord(self, invoker, avId, toon, *args):
-        battle = args[0]
+        numSeats = args[0]
         from toontown.suit.DistributedLawbotBossAI import DistributedLawbotBossAI
         boss = None
         for do in simbase.air.doId2do.values():
@@ -1860,8 +1860,11 @@ class rsc(MagicWord):
                     break
         if not boss:
             return "You aren't in a CJ!"
+        
+        if numSeats:
+            boss.weightPerToon[avId] = numSeats + 1
+            boss.customBonusWeight[avId] = numSeats
 
-        battle = battle.lower()
         boss.exitIntroduction()
         boss.b_setState('BattleThree')
         return "Restarting Scale Round"
@@ -1941,7 +1944,8 @@ class cannons(MagicWord):
         
         boss.exitIntroduction()
         
-        boss.numCannons = numCannons
+        if numCannons:
+            boss.numCannons = numCannons
         
         if boss.state in ('Elevator', 'WaitForToons', 'Introduction'):
             boss.b_setState('BattleOne')

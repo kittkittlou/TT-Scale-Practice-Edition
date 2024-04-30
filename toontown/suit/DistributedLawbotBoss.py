@@ -453,7 +453,9 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def loadJuryBox(self):
         self.juryBox = self.geom.find('**/JuryBox')
         juryBoxPos = self.juryBox.getPos()
+        print("THIS IS THE JURY BOX START POS: %s" % juryBoxPos)
         newPos = juryBoxPos - Point3(*ToontownGlobals.LawbotBossJuryBoxRelativeEndPos)
+        print("THIS IS THE JURY BOX NEW POS: %s" % newPos)
         if not self.debugPositions:
             self.juryBox.setPos(newPos)
         self.reflectedJuryBox = self.geom.find('**/JuryBox_Geo_Reflect')
@@ -804,6 +806,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.storeInterval(seq, intervalName)
         self.acceptOnce('doneChatPage', self.__showCannonsAppearing)
         base.playMusic(self.stingMusic, looping=0, volume=1.0)
+        self.juryBox.setPos(-30, 0, -12.645)
 
     def __showCannonsAppearing(self, elapsedTime = 0):
         allCannonsAppear = Sequence(Func(self.__positionToonsInFrontOfCannons), Func(camera.reparentTo, localAvatar), Func(camera.setPos, localAvatar.cameraPositions[2][0]), Func(camera.lookAt, localAvatar))
@@ -868,7 +871,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         if self.juryBoxIval:
             self.juryBoxIval.finish()
             self.juryBoxIval = None
-        self.juryBox.setPos(-30, 0, -12.645)
+        #self.juryBox.setPos(-30, 0, -12.645)
         self.reflectedJuryBox.setPos(-30, 0, 0)
 
         curPos = self.juryBox.getPos()
@@ -921,6 +924,11 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.betweenBattleMusic.stop()
 
     def enterPrepareBattleThree(self):
+    
+        if self.juryBoxIval:
+            self.juryBoxIval.finish()
+            self.juryBoxIval = None
+        
         self.notify.debug('----- enterPrepareBattleThree')
         if not self.rscTimer:
             self.rscTimer = ToontownTimer.ToontownTimer()
@@ -940,6 +948,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         seq = Sequence(prepareBattleThreeMovie, name=intervalName)
         seq.start()
         self.storeInterval(seq, intervalName)
+        self.juryBox.setPos(0, 0, 0)
 
     def __onToBattleThree(self, elapsed):
         self.notify.debug('----- __onToBattleThree')
@@ -957,6 +966,10 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.betweenBattleMusic.stop()
 
     def enterBattleThree(self):
+        if self.juryBoxIval:
+            self.juryBoxIval.finish()
+            self.juryBoxIval = None
+        self.juryBox.setPos(0, 0, 0)
         DistributedBossCog.DistributedBossCog.enterBattleThree(self)
         self.scaleNodePath.unstash()
         localAvatar.setPos(-3, 0, 0)

@@ -96,6 +96,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             }
         }
         self.numCannons = 0
+        self.customBonusWeight = {}
         
         return
 
@@ -556,8 +557,20 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.numPies = self.ammoCount
         self.resetBattles()
         self.setPieType()
+        
+        
+        totalCustomWeight = 0
         jurorsOver = self.numToonJurorsSeated - ToontownGlobals.LawbotBossJurorsForBalancedScale
+        
+        if self.customBonusWeight:
+            for bw in self.customBonusWeight.values():
+                totalCustomWeight += bw
+            jurorsOver = totalCustomWeight - ToontownGlobals.LawbotBossJurorsForBalancedScale
+        else:
+            jurorsOver = self.numToonJurorsSeated - ToontownGlobals.LawbotBossJurorsForBalancedScale
+         
         dmgAdjust = jurorsOver * ToontownGlobals.LawbotBossDamagePerJuror
+        
         self.b_setBossDamage(ToontownGlobals.LawbotBossInitialDamage + dmgAdjust, 0, 0)
         if simbase.config.GetBool('lawbot-boss-cheat', 0):
             self.b_setBossDamage(ToontownGlobals.LawbotBossMaxDamage - 1, 0, 0)
@@ -968,12 +981,12 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             practiceWeight = 0
             if self.practiceVal:
                 practiceWeight = int((self.practiceVal - 1)/len(self.involvedToons))
+
             newWeight = defaultWeight + bonusWeight + practiceWeight
             if toonId not in self.weightPerToon:
                 self.initialWeightPerToon[toonId] = newWeight
             self.weightPerToon[toonId] = newWeight
             self.notify.debug('toon %d has weight of %d' % (toonId, newWeight))
-
         return
 
     def b_setBattleDifficulty(self, batDiff):
