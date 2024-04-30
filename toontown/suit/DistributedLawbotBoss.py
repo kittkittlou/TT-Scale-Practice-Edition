@@ -785,6 +785,9 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         intervalName = 'RollToBattleTwo'
         self.clearInterval(intervalName)
         self.betweenBattleMusic.stop()
+        
+    def resetNumCannons(self):
+        self.cannons = {}
 
     def enterPrepareBattleTwo(self):
         self.notify.debug('----- enterPrepareBattleTwo')

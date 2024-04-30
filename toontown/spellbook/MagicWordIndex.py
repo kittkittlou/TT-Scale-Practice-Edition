@@ -1748,6 +1748,26 @@ class DisableGoons(MagicWord):
         for goon in simbase.air.doFindAllInstances(DistributedGoonAI):
             goon.requestStunned(0)
         return "Disabled all Goons!"
+        
+
+class StartBoss(MagicWord):
+    aliases = ['startvp', 'startcfo', 'startcj', 'startceo']
+    desc = 'Starts a boss battle.'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'DEVELOPER'
+
+    def handleWord(self, invoker, avId, toon, *args):
+        hood_zones = [ToontownGlobals.BossbotHQ, ToontownGlobals.LawbotHQ,
+                      ToontownGlobals.CashbotHQ, ToontownGlobals.SellbotHQ]
+        if toon.zoneId not in hood_zones:
+            return 'Toon is not in the correct zone! Expected a Cog HQ courtyard, got {}.'.format(toon.zoneId)
+
+        for hood in simbase.air.hoods:
+            if hood.zoneId == toon.zoneId:
+                zone = hood.lobbyMgr.createBossOffice([avId])
+                toon.sendUpdate('forceEnterBoss', [toon.zoneId, zone])
+                return 'Successfully created a boss!'
+        return 'Cog HQ hood data not found!'
 
 
 class SkipCJ(MagicWord):
@@ -1896,7 +1916,7 @@ class practice(MagicWord):
 
         boss.practiceVal = val
         boss.practiceRole = role
-        return "Role Set!"        
+        return "Role Set!"
 
 class cannons(MagicWord):
     desc = "Enters the cannon round"
@@ -1916,10 +1936,12 @@ class cannons(MagicWord):
         if not boss:
             return "You aren't in a CJ!"
 
+        if numCannons > 8 or numCannons < 0:
+            return 'Invalid number of cannons, choose 1 to 8'
         
         boss.exitIntroduction()
         
-        self.numCannons = numCannons
+        boss.numCannons = numCannons
         
         if boss.state in ('Elevator', 'WaitForToons', 'Introduction'):
             boss.b_setState('BattleOne')

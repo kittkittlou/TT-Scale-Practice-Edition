@@ -1157,6 +1157,7 @@ dclass DistributedToon : DistributedPlayer {
   setInstaKill(uint8) broadcast ownrecv ram;
   setRun() broadcast ownrecv ram;
   doTeleport(string hood);
+  forceEnterBoss(uint16 zone, uint32 doId) ownrecv;
 };
 
 dclass DistributedCCharBase : DistributedObject {
@@ -3174,6 +3175,7 @@ dclass DistributedLawbotBoss : DistributedBossCog {
   toonGotHealed(uint32) broadcast;
   enteredBonusState() broadcast;
   setBattleDifficulty(uint8) broadcast ram;
+  resetNumCannons() broadcast;
 };
 
 dclass DistributedLawbotBossSuit : DistributedSuitBase {
