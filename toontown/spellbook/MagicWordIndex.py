@@ -1901,11 +1901,11 @@ class practice(MagicWord):
 class cannons(MagicWord):
     desc = "Enters the cannon round"
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    arguments = [("round", str, False, "next")]
+    arguments = [("num", int, False, 0)]
     accessLevel = "MODERATOR"
 
     def handleWord(self, invoker, avId, toon, *args):
-        battle = args[0]
+        numCannons = args[0]
         from toontown.suit.DistributedLawbotBossAI import DistributedLawbotBossAI
         boss = None
         for do in simbase.air.doId2do.values():
@@ -1916,8 +1916,10 @@ class cannons(MagicWord):
         if not boss:
             return "You aren't in a CJ!"
 
-        battle = battle.lower()
+        
         boss.exitIntroduction()
+        
+        self.numCannons = numCannons
         
         if boss.state in ('Elevator', 'WaitForToons', 'Introduction'):
             boss.b_setState('BattleOne')

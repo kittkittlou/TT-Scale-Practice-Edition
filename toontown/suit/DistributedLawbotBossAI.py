@@ -95,8 +95,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
                 None: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             }
         }
-        
-        
+        self.numCannons = 0
         
         return
 
@@ -377,23 +376,27 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def __makeCannons(self):
-        if self.cannons == None:
-            self.cannons = []
-            startPt = Point3(*ToontownGlobals.LawbotBossCannonPosA)
-            endPt = Point3(*ToontownGlobals.LawbotBossCannonPosB)
-            totalDisplacement = endPt - startPt
-            self.notify.debug('totalDisplacement=%s' % totalDisplacement)
+        if self.cannons is not None:
+            self.__deleteCannons()
+    
+        self.cannons = []
+        startPt = Point3(*ToontownGlobals.LawbotBossCannonPosA)
+        endPt = Point3(*ToontownGlobals.LawbotBossCannonPosB)
+        totalDisplacement = endPt - startPt
+        self.notify.debug('totalDisplacement=%s' % totalDisplacement)
+        if self.numCannons:
+            numToons = self.numCannons
+        else:
             numToons = len(self.involvedToons)
-            numToons = 8
-            stepDisplacement = totalDisplacement / (numToons + 1)
-            for index in xrange(numToons):
-                newPos = stepDisplacement * (index + 1)
-                self.notify.debug('curDisplacement = %s' % newPos)
-                newPos += startPt
-                self.notify.debug('newPos = %s' % newPos)
-                cannon = DistributedLawbotCannonAI.DistributedLawbotCannonAI(self.air, self, index, newPos[0], newPos[1], newPos[2], -90, 0, 0)
-                cannon.generateWithRequired(self.zoneId)
-                self.cannons.append(cannon)
+        stepDisplacement = totalDisplacement / (numToons + 1)
+        for index in xrange(numToons):
+            newPos = stepDisplacement * (index + 1)
+            self.notify.debug('curDisplacement = %s' % newPos)
+            newPos += startPt
+            self.notify.debug('newPos = %s' % newPos)
+            cannon = DistributedLawbotCannonAI.DistributedLawbotCannonAI(self.air, self, index, newPos[0], newPos[1], newPos[2], -90, 0, 0)
+            cannon.generateWithRequired(self.zoneId)
+            self.cannons.append(cannon)
 
         return
 
