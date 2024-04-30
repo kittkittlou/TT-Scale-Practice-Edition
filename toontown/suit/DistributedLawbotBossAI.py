@@ -366,6 +366,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def enterPrepareBattleTwo(self):
+        self.customBonusWeight = {}
         self.sendUpdate('resetBattleTwoObjects', [])
         self.__makeCannons()
         self.barrier = self.beginBarrier('PrepareBattleTwo', self.involvedToons, 45, self.__donePrepareBattleTwo)
@@ -523,6 +524,9 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.ignoreBarrier(self.barrier)
 
     def enterBattleThree(self):
+        
+        self.takeAwayPies()
+        
         taskName = self.uniqueName('stun-task')
         taskMgr.remove(taskName)
         if self.practiceVal != 0 and 'stun' not in self.practiceRole:

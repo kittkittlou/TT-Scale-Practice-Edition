@@ -1861,6 +1861,10 @@ class rsc(MagicWord):
         if not boss:
             return "You aren't in a CJ!"
         
+        if boss.state in ('Elevator', 'WaitForToons', 'Introduction'):
+            boss.b_setState('BattleOne')
+            boss.b_setState('RollToBattleTwo')
+        
         if numSeats:
             boss.weightPerToon[avId] = numSeats + 1
             boss.customBonusWeight[avId] = numSeats

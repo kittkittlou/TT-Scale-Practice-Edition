@@ -1852,7 +1852,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.immunityTimer = ToontownTimer.ToontownTimer()
             self.immunityTimer.posInTopRightCorner()
         self.immunityTimer.show()
-        self.immunityTimer.countdown(ToontownGlobals.LawbotBossBonusWaitTime - ToontownGlobals.LawbotBossBonusDuration, self.hideImmunityTimer)
+        self.immunityTimer.countdown(40, self.hideImmunityTimer)
 
     def hideRscTimer(self):
         if self.rscTimer:
