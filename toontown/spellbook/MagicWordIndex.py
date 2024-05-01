@@ -1990,6 +1990,15 @@ class diff(MagicWord):
             boss.b_setBattleDifficulty(boss.customDifficulty)
         
         return "Set the difficulty to #%s" % (diffNum)
+        
+class invincible(MagicWord):
+    desc = "Set the difficulty for next restart"
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
+    accessLevel = "MODERATOR"
+
+    def handleWord(self, invoker, avId, toon, *args):
+        base.localAvatar.stunToon(time=100000)
+        return "INVINCIBLE!!!"
 
 class FillJury(MagicWord):
     desc = "Fills all of the chairs in the CJ's Jury Round."

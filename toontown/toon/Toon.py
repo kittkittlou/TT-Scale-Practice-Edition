@@ -2175,7 +2175,7 @@ class Toon(Avatar.Avatar, ToonHead):
         Emote.globalEmote.releaseAll(self)
         return
 
-    def stunToon(self, ts = 0, callback = None, knockdown = 0):
+    def stunToon(self, ts = 0, callback = None, knockdown = 0, time=0.5):
         if not self.isStunned:
             if self.stunTrack:
                 self.stunTrack.finish()
@@ -2187,11 +2187,11 @@ class Toon(Avatar.Avatar, ToonHead):
                     messenger.send('toonStunned-' + str(self.doId), [self.isStunned])
 
             node = self.getGeomNode()
-            lerpTime = 0.5
+            lerpTime = time
             down = self.doToonColorScale(VBase4(1, 1, 1, 0.6), lerpTime)
             up = self.doToonColorScale(VBase4(1, 1, 1, 0.9), lerpTime)
             clear = self.doToonColorScale(self.defaultColorScale, lerpTime)
-            track = Sequence(Func(setStunned, 1), down, up, down, up, down, up, down, clear, Func(self.restoreDefaultColorScale), Func(setStunned, 0))
+            track = Sequence(Func(setStunned, time), down, up, down, up, down, up, down, clear, Func(self.restoreDefaultColorScale), Func(setStunned, 0))
             if knockdown:
                 self.stunTrack = Parallel(ActorInterval(self, animName='slip-backward'), track)
             else:
