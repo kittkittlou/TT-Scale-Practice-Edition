@@ -1866,9 +1866,15 @@ class rsc(MagicWord):
             boss.b_setState('RollToBattleTwo')
         
         if numSeats:
-            boss.weightPerToon[avId] = numSeats + 1
             boss.customBonusWeight[avId] = numSeats
-
+        
+        if boss.customBonusWeight:
+            if boss.battleDifficulty in [8]:
+                boss.weightPerToon[avId] = boss.customBonusWeight[avId] + 1
+            elif boss.battleDifficulty in [6, 7]:
+                boss.weightPerToon[avId] = boss.customBonusWeight[avId]
+            else:
+                boss.weightPerToon[avId] = 1
         boss.exitIntroduction()
         boss.b_setState('BattleThree')
         return "Restarting Scale Round"
@@ -1981,6 +1987,7 @@ class diff(MagicWord):
         
         if diffNum:
             boss.customDifficulty = diffNum - 1
+            boss.b_setBattleDifficulty(boss.customDifficulty)
         
         return "Set the difficulty to #%s" % (diffNum)
 

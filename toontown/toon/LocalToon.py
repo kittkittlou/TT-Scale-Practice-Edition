@@ -63,6 +63,15 @@ AdjustmentForNewsButton = -0.275
 ClaraBaseXPos = 0.116667
 if (__debug__):
     import pdb
+    
+
+import TTEmote
+from otp.avatar import Emote
+
+from direct.gui.DirectGui import DirectWaitBar, DGG
+
+from toontown.toonbase import ToontownBattleGlobals
+from direct.gui.DirectGui import DirectButton, DGG
 
 class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
     neverDisable = 1
@@ -667,8 +676,6 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         return
 
     def localPresentPie(self, time):
-        import TTEmote
-        from otp.avatar import Emote
         self.__stopPresentPie()
         if self.tossTrack:
             tossTrack = self.tossTrack
@@ -703,8 +710,6 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
     def __stopPresentPie(self):
         if self.__presentingPie:
-            import TTEmote
-            from otp.avatar import Emote
             Emote.globalEmote.releaseBody(self)
             messenger.send('end-pie')
             self.__presentingPie = 0
@@ -845,7 +850,6 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         self.updatePieButton()
 
     def makePiePowerMeter(self):
-        from direct.gui.DirectGui import DirectWaitBar, DGG
         if self.__piePowerMeter == None:
             self.__piePowerMeter = DirectWaitBar(frameSize=(-0.2,
              0.2,
@@ -855,8 +859,6 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         return
 
     def updatePieButton(self):
-        from toontown.toonbase import ToontownBattleGlobals
-        from direct.gui.DirectGui import DirectButton, DGG
         wantButton = 0
         if self.allowPies and self.numPies > 0:
             wantButton = 1

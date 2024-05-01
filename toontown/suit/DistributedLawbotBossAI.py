@@ -388,7 +388,6 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         endPt = Point3(*ToontownGlobals.LawbotBossCannonPosB)
         totalDisplacement = endPt - startPt
         self.notify.debug('totalDisplacement=%s' % totalDisplacement)
-        print(self.numCannons)
         if self.numCannons:
             numToons = self.numCannons
         else:
