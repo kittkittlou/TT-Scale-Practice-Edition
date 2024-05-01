@@ -97,6 +97,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         }
         self.numCannons = 0
         self.customBonusWeight = {}
+        self.customDifficulty = 0
         
         return
 
@@ -1004,6 +1005,9 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         self.sendUpdate('setBattleDifficulty', [batDiff])
 
     def calcAndSetBattleDifficulty(self):
+        if self.customDifficulty >= 0 and self.customDifficulty <= 8:
+            self.b_setBattleDifficulty(self.customDifficulty)
+            return
         self.toonLevels = self.getToonDifficulty()
         numDifficultyLevels = len(ToontownGlobals.LawbotBossDifficultySettings)
         battleDifficulty = int(self.toonLevels / self.maxToonLevels * numDifficultyLevels)

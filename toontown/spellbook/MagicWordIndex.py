@@ -1957,7 +1957,32 @@ class cannons(MagicWord):
         
         boss.b_setState('PrepareBattleTwo')
         return "Entering Cannon Round"
+        
+class diff(MagicWord):
+    desc = "Set the difficulty for next restart"
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments = [("diffNum", int, False, 0)]
+    accessLevel = "MODERATOR"
 
+    def handleWord(self, invoker, avId, toon, *args):
+        diffNum = args[0]
+        from toontown.suit.DistributedLawbotBossAI import DistributedLawbotBossAI
+        boss = None
+        for do in simbase.air.doId2do.values():
+            if isinstance(do, DistributedLawbotBossAI):
+                if invoker.doId in do.involvedToons:
+                    boss = do
+                    break
+        if not boss:
+            return "You aren't in a CJ!"
+            
+        if diffNum < 0 or diffNum > 9:
+            return "Invalid difficulty, only 1 to 9 are valid"
+        
+        if diffNum:
+            boss.customDifficulty = diffNum - 1
+        
+        return "Set the difficulty to #%s" % (diffNum)
 
 class FillJury(MagicWord):
     desc = "Fills all of the chairs in the CJ's Jury Round."
