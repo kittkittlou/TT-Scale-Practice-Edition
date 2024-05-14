@@ -383,6 +383,7 @@ MinigameIDs = (RaceGameId,
  TwoDGameId,
  PhotoGameId,
  TravelGameId)
+MinigameIDs = (TugOfWarGameId) # filter out the rest of the games
 MinigamePlayerMatrix = {1: (CannonGameId,
      RingGameId,
      MazeGameId,
@@ -438,6 +439,10 @@ MinigamePlayerMatrix = {1: (CannonGameId,
      IceGameId,
      CogThiefGameId,
      TwoDGameId)}
+MinigamePlayerMatrix = {1: (TugOfWarGameId, TugOfWarGameId),
+ 2: (TugOfWarGameId, TugOfWarGameId),
+ 3: (TugOfWarGameId, TugOfWarGameId),
+ 4: (TugOfWarGameId, TugOfWarGameId)}
 MinigameReleaseDates = {IceGameId: (2008, 8, 5),
  PhotoGameId: (2008, 8, 13),
  TwoDGameId: (2008, 8, 20),

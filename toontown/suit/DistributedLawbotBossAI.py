@@ -146,6 +146,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             self.__recordHit()
             
     def __stunTheLawyers(self, task=None):
+        print("hi?")
         for suit in self.lawyers:
             suit.hitByToon()
 
@@ -532,6 +533,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         if self.practiceVal != 0 and 'stun' not in self.practiceRole:
             self.calculateWeightPerToon()
             taskMgr.doMethodLater(self.stunTimeDict[self.practiceVal], self.__stunTheLawyers, self.uniqueName('stun-task'))
+        taskMgr.doMethodLater(14.2, self.__stunTheLawyers, self.uniqueName('stun-task'))
         self.battleThreeTimeStarted = globalClock.getFrameTime()
         self.calcAndSetBattleDifficulty()
         if self.chairs != None:
@@ -864,6 +866,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
     def __makeLawyers(self):
         self.__resetLawyers()
         lawCogChoices = ['b','dt', 'ac', 'bs', 'sd', 'le', 'bw']
+        lawCogChoices = ['dt']
         for i in xrange(self.numLawyers):
             if self.practiceVal and self.practiceRole:
                 if i not in self.roleCogsDict[self.practiceVal][self.practiceRole]:

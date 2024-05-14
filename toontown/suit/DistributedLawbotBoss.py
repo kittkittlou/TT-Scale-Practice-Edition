@@ -966,10 +966,12 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.betweenBattleMusic.stop()
 
     def enterBattleThree(self):
+        base.localAvatar.setHpr(76, 0, 0)
         if self.juryBoxIval:
             self.juryBoxIval.finish()
             self.juryBoxIval = None
         self.juryBox.setPos(0, 0, 0)
+        self.reflectedJuryBox.setPos(0, 0, 12.645)
         DistributedBossCog.DistributedBossCog.enterBattleThree(self)
         self.scaleNodePath.unstash()
         localAvatar.setPos(-3, 0, 0)

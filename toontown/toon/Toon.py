@@ -2903,6 +2903,7 @@ class Toon(Avatar.Avatar, ToonHead):
             return render.getRelativeVector(toon, relVel)
 
         partName = None if self.playingAnim == 'neutral' else 'torso'
+        #partName = None #OLD
 
         def matchRunningAnim(toon = self):
             toon.playingAnim = None

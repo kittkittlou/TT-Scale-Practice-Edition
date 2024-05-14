@@ -202,6 +202,12 @@ ToonDoubleTapSprintWindow = 0.40  # Time in seconds you have to register a doubl
 ToonSprintFovIncrease = 5  # How big should the fov increase when sprinting?
 ToonForwardSprintSpeed = 20.16 * ToonSpeedFactor
 ToonReverseSprintSpeed = 15 * ToonSpeedFactor
+
+
+#ToonForwardSpeed = 16.0 * ToonSpeedFactor #OLD
+#ToonReverseSpeed = 8.0 * ToonSpeedFactor #OLD
+#ToonRotateSpeed = 80.0 * ToonSpeedFactor #OLD
+
 MickeySpeed = 5.0
 MinnieSpeed = 3.2
 DonaldSpeed = 3.68
