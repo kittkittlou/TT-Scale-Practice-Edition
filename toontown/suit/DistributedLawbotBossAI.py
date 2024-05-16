@@ -533,7 +533,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         if self.practiceVal != 0 and 'stun' not in self.practiceRole:
             self.calculateWeightPerToon()
             taskMgr.doMethodLater(self.stunTimeDict[self.practiceVal], self.__stunTheLawyers, self.uniqueName('stun-task'))
-        taskMgr.doMethodLater(14.2, self.__stunTheLawyers, self.uniqueName('stun-task'))
+        #taskMgr.doMethodLater(14.2, self.__stunTheLawyers, self.uniqueName('stun-task'))
         self.battleThreeTimeStarted = globalClock.getFrameTime()
         self.calcAndSetBattleDifficulty()
         if self.chairs != None:
